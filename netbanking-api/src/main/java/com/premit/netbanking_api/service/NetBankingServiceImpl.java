@@ -1,5 +1,6 @@
 package com.premit.netbanking_api.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.premit.netbanking_api.dto.BankAccountDTO;
 import com.premit.netbanking_api.dto.entity.BankAccountEntity;
 import com.premit.netbanking_api.repository.BankAccountRepository;
@@ -12,19 +13,15 @@ import java.util.Optional;
 public class NetBankingServiceImpl implements NetBankingService{
 
     @Autowired
+    ObjectMapper mapper;
+
+    @Autowired
     BankAccountRepository bankAccountRepository;
 
     @Override
     public String createBankAccount(BankAccountDTO bankAccountDTO) {
-
-        BankAccountEntity bankAccountEntity = new BankAccountEntity();
-        bankAccountEntity.setAccountBalance(bankAccountDTO.getAccountBalance());
-        bankAccountEntity.setAccountNumber(bankAccountDTO.getAccountNumber());
-        bankAccountEntity.setAccountType(bankAccountDTO.getAccountType());
-        bankAccountEntity.setAccountHolderName(bankAccountDTO.getAccountHolderName());
-
+        BankAccountEntity bankAccountEntity = mapper.convertValue(bankAccountDTO,BankAccountEntity.class);
         bankAccountRepository.save(bankAccountEntity);
-
         return "Account created successfully, Please login.";
     }
 
